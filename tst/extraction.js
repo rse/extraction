@@ -38,38 +38,16 @@ describe("Extraction Library", function () {
         expect(extraction).to.respondTo("reify")
     })
     it("should extract simply", function () {
-        expect(extraction.extract(Graph, "{}", { ignoreMatchErrors: true, debug: true }))
+        expect(extraction.extract(Graph, "{}", { ignoreMatchErrors: true, debug: false }))
             .to.be.deep.equal({})
-        expect(extraction.extract(Graph, "{ * }", { ignoreMatchErrors: true, debug: true }))
+        expect(extraction.extract(Graph, "{ * }", { ignoreMatchErrors: true, debug: false }))
             .to.be.deep.equal({ Person: [], Location: [] })
-        expect(extraction.extract(Graph, "{ Person [ * { id, name } ] }", { ignoreMatchErrors: true, debug: true }))
+        expect(extraction.extract(Graph, "{ Person [ * { id, name } ] }", { ignoreMatchErrors: true, debug: false }))
             .to.be.deep.equal({ Person: [ { id: 7, name: "God" }, { id: 666, name: "Devil" } ] })
         extraction.extract(Graph, "{ Person [ * { id, name } ] }")
         extraction.extract(Graph, "{ Person [ * { id, name } ] }")
-
-        /*
-        console.log(require("util").inspect(extraction(Graph,
-            "{ Person [ * { id, tags [ -> oo ] } ], !Location }"
-        ), { depth: null, colors: true }))
-        console.log(require("util").inspect(extraction(Graph,
-            "{ -> oo }"
-        ), { depth: null, colors: true }))
-        */
-        console.log(extraction.extract(Graph, "{ -> oo }", {
-            procValueAfter: (value) => {
-                if (typeof value === "object" && value !== null) {
-                    if (value instanceof Array)
-                        value = "[" + value.join(",") + "]"
-                    else
-                        value = "{" + Object.keys(value).map(function (key) {
-                            return JSON.stringify(key) + ":" + value[key]
-                        }).join(",") + "}"
-                }
-                else
-                    value = JSON.stringify(value)
-                return value
-            }
-        }))
+    })
+    it("should fully extract and reify again", function () {
         var g = extraction.extract(Graph, "{ -> oo }")
         extraction.reify(g)
         expect(g).to.be.deep.equal(Graph)
