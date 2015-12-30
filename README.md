@@ -70,7 +70,7 @@ Example
 -------
 
 Suppose we have an object graph (aka "business model") based
-on two entity definitions:
+on two entity definitions (in pseudo language):
 
 ```
 Person {
