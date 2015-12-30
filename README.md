@@ -265,6 +265,27 @@ $ curl http://127.0.0.1:12345/persons/6660
 {"id":666,"name":"Devil","home":{"id":999,"name":"Hell"}}
 ```
 
+Finally, instead of extracting a tree and then encoding it
+as JSON, you can immediately encode it during extraction:
+
+```js
+extraction.extract(Graph, "{ -> oo }", {
+    procValueAfter: (value) => {
+        if (typeof value === "object" && value !== null) {
+            if (value instanceof Array)
+                value = "[" + value.join(",") + "]"
+            else
+                value = "{" + Object.keys(value).map(function (key) {
+                    return JSON.stringify(key) + ":" + value[key]
+                }).join(",") + "}"
+        }
+        else
+            value = JSON.stringify(value)
+        return value
+    }
+}))
+```
+
 Implementation Notice
 ---------------------
 
