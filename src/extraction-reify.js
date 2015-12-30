@@ -42,7 +42,7 @@ const reifyInternal = (node, options, path, map) => {
         /*  process object references  */
         let obj
         if (options.getObject)
-            obj = options.getObject(node)
+            obj = options.getObject(node, path)
         else
             obj = map[node]
         if (obj === undefined)
@@ -52,7 +52,7 @@ const reifyInternal = (node, options, path, map) => {
     else if (node !== null && typeof node === "object") {
         /*  process objects  */
         if (options.setObject)
-            options.setObject(path, node)
+            options.setObject(node, path)
         else
             map[path] = node
         if (node instanceof Array) {
