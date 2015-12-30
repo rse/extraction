@@ -92,7 +92,6 @@ A possible JavaScript instanciation of this object graph definition then
 could be:
 
 ```js
-/*  the sample object graph  */
 var Graph = {
     Person: [
         { id: 7,   name: "God",   tags: [ "good", "nice" ] },
@@ -104,11 +103,15 @@ var Graph = {
         { id: 999, name: "Hell" }
     ]
 }
+
 Graph.Person[0].home    = Graph.Location[1]
 Graph.Person[1].home    = Graph.Location[2]
+
 Graph.Person[1].rival   = Graph.Person[0]
 Graph.Person[0].rival   = Graph.Person[1]
+
 Graph.Location[0].subs  = [ Graph.Location[1], Graph.Location[2] ]
+
 Graph.Location[1].owner = Graph.Person[0]
 Graph.Location[2].owner = Graph.Person[1]
 ```
