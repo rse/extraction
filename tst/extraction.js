@@ -7,7 +7,7 @@
 **  "Software"), to deal in the Software without restriction, including
 **  without limitation the rights to use, copy, modify, merge, publish,
 **  distribute, sublicense, and/or sell copies of the Software, and to
-**  permit persons to whom the Software is furnished to do so, subject to
+**  permit Person to whom the Software is furnished to do so, subject to
 **  the following conditions:
 **
 **  The above copyright notice and this permission notice shall be included
@@ -29,26 +29,7 @@
 /* jshint -W030: false */
 
 var extraction = require("../lib/extraction.js")
-
-/*  the sample graph  */
-var persons = [
-    { id: 7,   name: "God",   tags: [ "good", "nice" ] },
-    { id: 666, name: "Devil", tags: [ "bad", "cruel" ] }
-]
-var locations = [
-    { id: 1,   name: "Heaven" },
-    { id: 999, name: "Hell" }
-]
-persons[0].location = locations[0]
-persons[1].location = locations[1]
-persons[1].counterpart = persons[0]
-persons[0].counterpart = persons[1]
-locations[0].owner = persons[0]
-locations[0].owner = persons[1]
-var graph = {
-    persons: persons,
-    locations: locations
-}
+var Graph      = require("../smp/graph.js")
 
 describe("Extraction Library", function () {
     it("should expose its official API", function () {
@@ -57,23 +38,24 @@ describe("Extraction Library", function () {
         expect(extraction).to.respondTo("reify")
     })
     it("should extract simply", function () {
-        expect(extraction.extract(graph, "{}", { ignoreMatchErrors: true, debug: true }))
+        expect(extraction.extract(Graph, "{}", { ignoreMatchErrors: true, debug: true }))
             .to.be.deep.equal({})
-        expect(extraction.extract(graph, "{ * }", { ignoreMatchErrors: true, debug: true }))
-            .to.be.deep.equal({ persons: [], locations: [] })
-        expect(extraction.extract(graph, "{ persons [ * { id, name } ] }", { ignoreMatchErrors: true, debug: true }))
-            .to.be.deep.equal({ persons: [ { id: 7, name: "God" }, { id: 666, name: "Devil" } ] })
-        extraction.extract(graph, "{ persons [ * { id, name } ] }")
-        extraction.extract(graph, "{ persons [ * { id, name } ] }")
+        expect(extraction.extract(Graph, "{ * }", { ignoreMatchErrors: true, debug: true }))
+            .to.be.deep.equal({ Person: [], Location: [] })
+        expect(extraction.extract(Graph, "{ Person [ * { id, name } ] }", { ignoreMatchErrors: true, debug: true }))
+            .to.be.deep.equal({ Person: [ { id: 7, name: "God" }, { id: 666, name: "Devil" } ] })
+        extraction.extract(Graph, "{ Person [ * { id, name } ] }")
+        extraction.extract(Graph, "{ Person [ * { id, name } ] }")
+
         /*
-        console.log(require("util").inspect(extraction(graph,
-            "{ persons [ * { id, tags [ -> oo ] } ], !locations }"
+        console.log(require("util").inspect(extraction(Graph,
+            "{ Person [ * { id, tags [ -> oo ] } ], !Location }"
         ), { depth: null, colors: true }))
-        console.log(require("util").inspect(extraction(graph,
+        console.log(require("util").inspect(extraction(Graph,
             "{ -> oo }"
         ), { depth: null, colors: true }))
         */
-        console.log(extraction.extract(graph, "{ -> oo }", {
+        console.log(extraction.extract(Graph, "{ -> oo }", {
             procValueAfter: (value) => {
                 if (typeof value === "object" && value !== null) {
                     if (value instanceof Array)
@@ -88,9 +70,9 @@ describe("Extraction Library", function () {
                 return value
             }
         }))
-        var g = extraction.extract(graph, "{ -> oo }")
+        var g = extraction.extract(Graph, "{ -> oo }")
         extraction.reify(g)
-        expect(g).to.be.deep.equal(graph)
+        expect(g).to.be.deep.equal(Graph)
     })
 })
 
