@@ -284,7 +284,14 @@ extraction.extract(Graph, "{ -> oo }", {
         return value
     }
 }))
-// -> {"Person":[{"id":7,"name":"God","tags":["good","nice"],"home":{"id":1,"name":"Heaven","owner":"@self.Person.0"},"rival":{"id":666,"name":"Devil","tags":["bad","cruel"],"home":{"id":999,"name":"Hell","owner":"@self.Person.0.rival"},"rival":"@self.Person.0"}},"@self.Person.0.rival"],"Location":[{"id":0,"name":"World","subs":["@self.Person.0.home","@self.Person.0.rival.home"]},"@self.Person.0.home","@self.Person.0.rival.home"]}
+// {"Person":[{"id":7,"name":"God","tags":["good","nice"],
+// "home":{"id":1,"name":"Heaven","owner":"@self.Person.0"},
+// "rival":{"id":666,"name":"Devil","tags":["bad","cruel"],
+// "home":{"id":999,"name":"Hell","owner":"@self.Person.0.rival"},
+// "rival":"@self.Person.0"}},"@self.Person.0.rival"],
+// "Location":[{"id":0,"name":"World","subs":["@self.Person.0.home",
+// "@self.Person.0.rival.home"]},"@self.Person.0.home",
+// "@self.Person.0.rival.home"]}
 ```
 
 Implementation Notice
