@@ -72,124 +72,134 @@ Example
 Suppose we have an object graph (aka "business model") based
 on two entity definitions:
 
-    Person {
-        id:    number
-        name:  string
-        tags:  string+
-        home:  Location
-        rival: Person?
-    }
-    Location {
-        id:     number
-        name:   string
-        owner:  Person?
-        subs:   Location*
-    }
+```
+Person {
+    id:    number
+    name:  string
+    tags:  string+
+    home:  Location
+    rival: Person?
+}
+Location {
+    id:     number
+    name:   string
+    owner:  Person?
+    subs:   Location*
+}
+```
 
 A possible JavaScript instanciation of this object graph definition then
 could be:
 
-    /*  the sample object graph  */
-    var Graph = {
-        Person: [
-            { id: 7,   name: "God",   tags: [ "good", "nice" ] },
-            { id: 666, name: "Devil", tags: [ "bad", "cruel" ] }
-        ],
-        Location: [
-            { id: 0,   name: "World" },
-            { id: 1,   name: "Heaven" },
-            { id: 999, name: "Hell" }
-        ]
-    }
-    Graph.Person[0].home    = Graph.Location[1]
-    Graph.Person[1].home    = Graph.Location[2]
-    Graph.Person[1].rival   = Graph.Person[0]
-    Graph.Person[0].rival   = Graph.Person[1]
-    Graph.Location[0].subs  = [ Graph.Location[1], Graph.Location[2] ]
-    Graph.Location[1].owner = Graph.Person[0]
-    Graph.Location[2].owner = Graph.Person[1]
+```js
+/*  the sample object graph  */
+var Graph = {
+    Person: [
+        { id: 7,   name: "God",   tags: [ "good", "nice" ] },
+        { id: 666, name: "Devil", tags: [ "bad", "cruel" ] }
+    ],
+    Location: [
+        { id: 0,   name: "World" },
+        { id: 1,   name: "Heaven" },
+        { id: 999, name: "Hell" }
+    ]
+}
+Graph.Person[0].home    = Graph.Location[1]
+Graph.Person[1].home    = Graph.Location[2]
+Graph.Person[1].rival   = Graph.Person[0]
+Graph.Person[0].rival   = Graph.Person[1]
+Graph.Location[0].subs  = [ Graph.Location[1], Graph.Location[2] ]
+Graph.Location[1].owner = Graph.Person[0]
+Graph.Location[2].owner = Graph.Person[1]
+```
 
 Because of the relationship cycles in this graph, you cannot easily
 serialize this graph as JSON with plain `JSON.stringify()` as it
 will detect but not handle the cycles correctly. With the Extraction library
 you can serialize and deseralize this graph just fine:
 
-    /*  import external requirements  */
-    import { extract, reify } from "extraction"
-    import { expect }         from "chai"
-    import { inspect }        from "util"
-    
-    /*  extract entire graph as a tree with self-references  */
-    let tree = extract(Graph, "{ -> oo }")
-    console.log(inspect(tree, { depth: null }))
-    
-    //  { Person:
-    //     [ { id: 7,
-    //         name: 'God',
-    //         tags: [ 'good', 'nice' ],
-    //         home: { id: 1, name: 'Heaven', owner: '@self.Person.0' },
-    //         rival:
-    //          { id: 666,
-    //            name: 'Devil',
-    //            tags: [ 'bad', 'cruel' ],
-    //            home: { id: 999, name: 'Hell', owner: '@self.Person.0.rival' },
-    //            rival: '@self.Person.0' } },
-    //       '@self.Person.0.rival' ],
-    //    Location:
-    //     [ { id: 0,
-    //         name: 'World',
-    //         subs: [ '@self.Person.0.home', '@self.Person.0.rival.home' ] },
-    //       '@self.Person.0.home',
-    //       '@self.Person.0.rival.home' ] }
-    
-    /*  as the tree has no cycles, it can be serialized/unserialized just fine  */
-    tree = JSON.parse(JSON.stringify(tree))
-    
-    /*  reify the object references to gain the original graph again  */
-    let GraphNew = reify(tree)
-    expect(GraphNew).to.be.deep.equal(Graph)
+```js
+/*  import external requirements  */
+import { extract, reify } from "extraction"
+import { expect }         from "chai"
+import { inspect }        from "util"
+
+/*  extract entire graph as a tree with self-references  */
+let tree = extract(Graph, "{ -> oo }")
+console.log(inspect(tree, { depth: null }))
+
+//  { Person:
+//     [ { id: 7,
+//         name: 'God',
+//         tags: [ 'good', 'nice' ],
+//         home: { id: 1, name: 'Heaven', owner: '@self.Person.0' },
+//         rival:
+//          { id: 666,
+//            name: 'Devil',
+//            tags: [ 'bad', 'cruel' ],
+//            home: { id: 999, name: 'Hell', owner: '@self.Person.0.rival' },
+//            rival: '@self.Person.0' } },
+//       '@self.Person.0.rival' ],
+//    Location:
+//     [ { id: 0,
+//         name: 'World',
+//         subs: [ '@self.Person.0.home', '@self.Person.0.rival.home' ] },
+//       '@self.Person.0.home',
+//       '@self.Person.0.rival.home' ] }
+
+/*  as the tree has no cycles, it can be serialized/unserialized just fine  */
+tree = JSON.parse(JSON.stringify(tree))
+
+/*  reify the object references to gain the original graph again  */
+let GraphNew = reify(tree)
+expect(GraphNew).to.be.deep.equal(Graph)
+```
 
 Now suppose we have a REST API where we want to let Persons
 with their home Location be queried:
 
-    /*  import external requirements  */
-    import HAPI        from "hapi"
-    import { extract } from "./lib/extraction"
-    
-    /*  import sample graph  */
-    import Graph       from "./sample-graph"
-    
-    /*  establish a new REST service  */
-    var server = new HAPI.Server()
-    server.connection({ address: "0.0.0.0", port: "12345" })
-    
-    /*  provide REST endpoints  */
-    server.route({
-        method: "GET",
-        path: "/persons/{id}",
-        handler: (request, reply) => {
-            let id = parseInt(request.params.id)
-            let person = Graph.Person.find((person) => person.id === id)
-            let response = JSON.stringify(extract(
-                person, "{ id, name, home { id, name } }"
-            ))
-            reply(response)
-        }
-    })
-    
-    /*  fire up REST service  */
-    server.start((err) => {
-        if (err)
-            console.log(err)
-    })
+```js
+/*  import external requirements  */
+import HAPI        from "hapi"
+import { extract } from "./lib/extraction"
+
+/*  import sample graph  */
+import Graph       from "./sample-graph"
+
+/*  establish a new REST service  */
+var server = new HAPI.Server()
+server.connection({ address: "0.0.0.0", port: "12345" })
+
+/*  provide REST endpoints  */
+server.route({
+    method: "GET",
+    path: "/persons/{id}",
+    handler: (request, reply) => {
+        let id = parseInt(request.params.id)
+        let person = Graph.Person.find((person) => person.id === id)
+        let response = JSON.stringify(extract(
+            person, "{ id, name, home { id, name } }"
+        ))
+        reply(response)
+    }
+})
+
+/*  fire up REST service  */
+server.start((err) => {
+    if (err)
+        console.log(err)
+})
+```
 
 Querying the two Persons yields:
 
-    $ curl http://127.0.0.1:12345/persons/7
-    {"id":7,"name":"God","home":{"id":1,"name":"Heaven"}}
-    
-    $ curl http://127.0.0.1:12345/persons/6660
-    {"id":666,"name":"Devil","home":{"id":999,"name":"Hell"}}
+```
+$ curl http://127.0.0.1:12345/persons/7
+{"id":7,"name":"God","home":{"id":1,"name":"Heaven"}}
+
+$ curl http://127.0.0.1:12345/persons/6660
+{"id":666,"name":"Devil","home":{"id":999,"name":"Hell"}}
+```
 
 Implementation Notice
 ---------------------
