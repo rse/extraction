@@ -1,5 +1,5 @@
 /*
-**  Extraction -- Data Structure Extraction for JavaScript
+**  Extraction -- Tree Extraction for JavaScript Object Graphs
 **  Copyright (c) 2015 Ralf S. Engelschall <rse@engelschall.com>
 **
 **  Permission is hereby granted, free of charge, to any person obtaining
