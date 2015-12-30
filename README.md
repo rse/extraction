@@ -41,7 +41,7 @@ $ bower install extraction
 Usage
 -----
 
-The Extraction library exposes two API functions:
+The Extraction library exposes two API functions (signatures given in TypeScript notation):
 
 ### `extract`
 
@@ -52,7 +52,44 @@ graph with the help of a tree extraction DSL.
 extraction.extract(graph: object, spec: string, options?: object): object
 ```
 
-FIXME
+- The `graph` argument has to be an Array of Object and be any start node in the graph.
+
+- The `spec` argument is the tree extraction specification Domain-Specific Language (DSL).
+  It has to follow the following PEG-style grammar:
+
+    RHS      |     | LHS
+    ---------|-----|---------------------------
+    spec     | ::= | object / array
+    object   | ::= | `"{"` content? `"}"`
+    array    | ::= | `"["` content? `"]"`
+    content  | ::= | (`"->"` num) / (field (`","` field)*)
+    field    | ::= | (property spec) / (`"!"`? property)
+    property | ::= | id / `"*"` / (num `".."` num) / num
+    num      | ::= | (`"-"`? `[0-9]`+) / `"-oo"` / `"oo"`
+    id       | ::= | `[$a-zA-Z_][$a-zA-Z0-9_]`\*
+
+  Hint: the matching of multiple `field` in `content` follows a last-match semantic!
+
+- The `options` argument is optional and can contain the following properties:
+
+    - `procValueBefore: (value: any) => any`:<br/>
+       Pre-process a value (object or property value) before it is taken into account.
+       A caller could use this to convert the value from a custom type into a standard
+       JavaScript type.
+
+    - `procValueAfter: (value: any) => any`:<br/>
+       Post-process a value (object or property value) after it was taken into account.
+       A caller could use this to convert the value into an external representation
+       like JSON or XML.
+
+    - `makeRefValue: (pathFirst: string, pathNow: string, obj: Object) => any`:<br/>
+       Make an object reference out of an object `obj`, which is now found (again)
+       at path `pathNow` and the first-time found at `pathFirst`. The default
+       is to use `pathFirst` as the reference, but a caller could also use
+       a stub for `obj` (usually based on just the OID of it) as the reference.
+
+    - `debug: boolean`:<br/>
+       Print debug information about internal processing.
 
 ### `reify`
 
@@ -64,7 +101,31 @@ objects.
 extraction.reify(tree: object, options?: object): object
 ```
 
-FIXME
+- The `tree` argument is the root of an object tree which should be traversed.
+
+- The `options` argument is optional and can contain the following properties:
+
+    - `procValueBefore: (value: any) => any`:<br/>
+       Pre-process a value (object or property value) after it is taken into account.
+       A caller could use this to convert the value from an external representation
+       like JSON or XML.
+
+    - `procValueAfter: (value: any) => any`:<br/>
+       Post-process a value (object or property value) after it was taken into account.
+       A caller could use this to convert the value from a standard type into a custom
+       JavaScript type.
+
+    -  `isReference: (value: any) => boolean`:<br/>
+       Determine whether `value` is an object reference.
+
+    -  `getObject: (value: any, path: string) => any`:<br/>
+       Fetch the underlying object from an object reference `value`, found at `path`.
+
+    -  `setObject: (value: any, path: string) => void`:<br/>
+       Store an underlying object `value`, found at `path`.
+
+    - `debug: boolean`:<br/>
+       Print debug information about internal processing.
 
 Example
 -------
