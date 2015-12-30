@@ -13,7 +13,17 @@ Tree Extraction for JavaScript Object Graphs
 About
 -----
 
-Extraction is a very small JavaScript library... FIXME
+Extraction is a small JavaScript library for extracting object trees
+from arbitrary object graphs. Object graphs usually have cycles and
+contain many information. Hence, the clue is that the extracted object
+trees use links to break reference cycles and can be just partial by
+leaving out information.
+
+The Extraction library is intended for two main use cases: to support
+the persisting and restoring of arbitrary in-memory object graph
+structures (where the cycle problem has to be resolved) and to support
+the generation of responses in REST APIs based on object graphs (where
+the partial information has to be resolved).
 
 Installation
 ------------
@@ -33,13 +43,30 @@ $ bower install extraction
 Usage
 -----
 
+The Extraction library exposes two API functions:
+
+### `extract`
+
+This is the main API method for extracting an object tree from an object
+graph with the help of a tree extraction DSL.
+
 ```
 extraction.extract(graph: object, spec: string, options?: object): object
 ```
 
+FIXME
+
+### `reify`
+
+This is a utility API method to re-generate an object graph from an
+object tree by reifying all self-references back to the referenced
+objects.
+
 ```
 extraction.reify(tree: object, options?: object): object
 ```
+
+FIXME
 
 Implementation Notice
 ---------------------
