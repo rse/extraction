@@ -23,6 +23,33 @@ in-memory object graph structures (where the cycle problem has to be
 resolved) and to support the generation of responses in REST APIs based
 on object graphs (where the partial information has to be resolved).
 
+Sneak Preview
+-------------
+
+```js
+var Graph = {
+    Person: [
+        { id: 7,   name: "God",   tags: [ "good", "nice" ] },
+        { id: 666, name: "Devil", tags: [ "bad", "cruel" ] } ],
+    Location: [
+        { id: 0,   name: "World"  },
+        { id: 1,   name: "Heaven" },
+        { id: 999, name: "Hell"   } ] }
+Graph.Person[0].home    = Graph.Location[1]
+Graph.Person[1].home    = Graph.Location[2]
+Graph.Person[1].rival   = Graph.Person[0]
+Graph.Person[0].rival   = Graph.Person[1]
+Graph.Location[0].subs  = [ Graph.Location[1], Graph.Location[2] ]
+Graph.Location[1].owner = Graph.Person[0]
+Graph.Location[2].owner = Graph.Person[1]
+
+import { extract } from "extraction"
+let tree = extract(Graph.Person[0], "{ name, rival { home { name } }")
+
+import { expect  } from "chai"
+expect(tree).to.be.deep.equal({ name: "God", rival: { home: { name: "Hell" } } })
+```
+
 Installation
 ------------
 
