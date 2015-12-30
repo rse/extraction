@@ -33,9 +33,13 @@ $ bower install extraction
 Usage
 -----
 
+```
 extraction.extract(graph: object, spec: string, options?: object): object
+```
 
+```
 extraction.reify(tree: object, options?: object): object
+```
 
 Implementation Notice
 ---------------------
