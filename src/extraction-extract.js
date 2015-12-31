@@ -50,131 +50,151 @@ const extractObjectOrArray = (value, ast, options, depth, path, seen, toDepth) =
     if (options.procValueBefore)
         value = options.procValueBefore(value, path)
 
-    /*  provide debug information about current extraction  */
-    if (options.debug)
-        console.log(`extraction: DEBUG: match OBJECT: path: ${path}, depth: ${depth}, ` +
-            `mode: ${toDepth !== undefined ? "DEPTH" : "MATCH"}, ` +
-            `graph: ${typeof value}, AST: ${ast !== null ? ast.type() : "null"}`)
-
-    /*  detect circles in graph and break it with references to objects  */
-    let pathPrevious = seen.get(value)
-    if (pathPrevious) {
-        if (ast !== null && ast.childs().length > 0)
-            throw new Error(`"${path}": cannot extract parts of object already extracted at "${pathPrevious}"`)
-        if (options.makeRefValue)
-            value = options.makeRefValue(pathPrevious, path, value)
-        else
-            value = pathPrevious
+    /*  process special values which are technically also objects  */
+    if (typeof value === "object" && value instanceof Date)
+        /*  Date  */
+        value = new Date(value.getTime())
+    else if (typeof value === "object" && value instanceof RegExp) {
+        /*  RegExp  */
+        let flags = ""
+        if (value.global)     flags += "g"
+        if (value.ignoreCase) flags += "i"
+        if (value.multiline)  flags += "m"
+        let valueNew = new RegExp(value.source, flags)
+        if (value.lastIndex)
+            valueNew.lastIndex = value.lastIndex
+        value = valueNew
     }
     else {
-        seen.set(value, path)
+        /*  provide debug information about current extraction  */
+        if (options.debug)
+            console.log(`extraction: DEBUG: match OBJECT: path: ${path}, depth: ${depth}, ` +
+                `mode: ${toDepth !== undefined ? "DEPTH" : "MATCH"}, ` +
+                `graph: ${typeof value}, AST: ${ast !== null ? ast.type() : "null"}`)
 
-        /*  support depth-based traversal  */
-        let properties
-        if (toDepth === undefined) {
-            properties = ast.childs()
-            if (properties.length === 1 && properties[0].type() === "Depth") {
-                toDepth = depth + properties[0].get("depth")
-                properties = undefined
-            }
-        }
-
-        /*  helper function: determine whether value should be extracted  */
-        const shouldExtract = (properties, toDepth, val) => {
-            let extract = false
-            let subAst = null
-            if (toDepth !== undefined)
-                extract = true
-            else {
-                for (let k = 0; k < properties.length; k++) {
-                    /*  check whether property matches  */
-                    let matches = false
-                    if (properties[k].get("id") === val)
-                        matches = true
-                    else if (properties[k].get("any") === true)
-                        matches = true
-                    else {
-                        let from = properties[k].get("from")
-                        let to   = properties[k].get("to")
-                        if (   from !== undefined && to !== undefined
-                            && from <= Number(val) && Number(val) <= to)
-                            matches = true
-                    }
-                    if (matches) {
-                        if (properties[k].get("not") === true)
-                            /*  negative matching result  */
-                            extract = false
-                        else {
-                            /*  positive matching result  */
-                            extract = true
-                            subAst = properties[k]
-                            if (subAst.childs().length === 1)
-                                /*  can only be Object or Array node  */
-                                subAst = subAst.childs()[0]
-                        }
-                        /*  we continue matching remaining properties,
-                            as we are using a "last-match" semantic  */
-                    }
-                }
-            }
-            return [ extract, subAst ]
-        }
-
-        /*  iterate over object properties  */
-        if (value instanceof Array) {
-            let skip = false
-            if (ast !== null && ast.type() === "Property")
-                skip = true
-            else if (ast !== null && ast.type() !== "Array") {
-                if (!options.ignoreMatchErrors)
-                    throw new Error(`extraction failed at "${path}": found "Array", expected "${ast.type()}"`)
-                else
-                    skip = true
-            }
-            let a = []
-            if (!skip && (toDepth === undefined || (toDepth !== undefined && depth < toDepth))) {
-                let [ i, j ] = [ 0, 0 ]
-                for (; i < value.length; i++) {
-                    let [ extract, subAst ] = shouldExtract(properties, toDepth, j)
-                    if (extract) {
-                        if (typeof value[i] === "object" && value[i] !== null)
-                            a[j++] = extractObjectOrArray(value[i], subAst, options,
-                                depth + 1, `${path}.${i}`, seen, toDepth)
-                        else
-                            a[j++] = extractValue(value[i], subAst, options,
-                                depth + 1, `${path}.${i}`, seen, toDepth)
-                    }
-                }
-            }
-            value = a
+        /*  detect circles in graph and break it with references to objects  */
+        let pathPrevious = seen.get(value)
+        if (pathPrevious) {
+            if (ast !== null && ast.childs().length > 0)
+                throw new Error(`"${path}": cannot extract parts of object already ` +
+                    `extracted at "${pathPrevious}"`)
+            if (options.makeRefValue)
+                value = options.makeRefValue(pathPrevious, path, value)
+            else
+                value = pathPrevious
         }
         else {
-            let skip = false
-            if (ast !== null && ast.type() === "Property")
-                skip = true
-            else if (ast !== null && ast.type() !== "Object") {
-                if (!options.ignoreMatchErrors)
-                    throw new Error(`extraction failed at "${path}": found "Object", expected "${ast.type()}"`)
-                else
-                    skip = true
-            }
-            let o = {}
-            if (!skip && (toDepth === undefined || (toDepth !== undefined && depth < toDepth))) {
-                for (var key in value) {
-                    if (!Object.hasOwnProperty.call(value, key))
-                        continue
-                    let [ extract, subAst ] = shouldExtract(properties, toDepth, key)
-                    if (extract) {
-                        if (typeof value[key] === "object" && value[key] !== null)
-                            o[key] = extractObjectOrArray(value[key], subAst, options,
-                                depth + 1, `${path}.${key}`, seen, toDepth)
-                        else
-                            o[key] = extractValue(value[key], subAst, options,
-                                depth + 1, `${path}.${key}`, seen, toDepth)
-                    }
+            seen.set(value, path)
+
+            /*  support depth-based traversal  */
+            let properties
+            if (toDepth === undefined) {
+                properties = ast.childs()
+                if (properties.length === 1 && properties[0].type() === "Depth") {
+                    toDepth = depth + properties[0].get("depth")
+                    properties = undefined
                 }
             }
-            value = o
+
+            /*  helper function: determine whether value should be extracted  */
+            const shouldExtract = (properties, toDepth, val) => {
+                let extract = false
+                let subAst = null
+                if (toDepth !== undefined)
+                    extract = true
+                else {
+                    for (let k = 0; k < properties.length; k++) {
+                        /*  check whether property matches  */
+                        let matches = false
+                        if (properties[k].get("id") === val)
+                            matches = true
+                        else if (properties[k].get("any") === true)
+                            matches = true
+                        else {
+                            let from = properties[k].get("from")
+                            let to   = properties[k].get("to")
+                            if (   from !== undefined && to !== undefined
+                                && from <= Number(val) && Number(val) <= to)
+                                matches = true
+                        }
+                        if (matches) {
+                            if (properties[k].get("not") === true)
+                                /*  negative matching result  */
+                                extract = false
+                            else {
+                                /*  positive matching result  */
+                                extract = true
+                                subAst = properties[k]
+                                if (subAst.childs().length === 1)
+                                    /*  can only be Object or Array node  */
+                                    subAst = subAst.childs()[0]
+                            }
+                            /*  we continue matching remaining properties,
+                                as we are using a "last-match" semantic  */
+                        }
+                    }
+                }
+                return [ extract, subAst ]
+            }
+
+            /*  iterate over object properties  */
+            if (value instanceof Array) {
+                let skip = false
+                if (ast !== null && ast.type() === "Property")
+                    skip = true
+                else if (ast !== null && ast.type() !== "Array") {
+                    if (!options.ignoreMatchErrors)
+                        throw new Error(`extraction failed at "${path}": ` +
+                            `found "Array", expected "${ast.type()}"`)
+                    else
+                        skip = true
+                }
+                let a = []
+                if (!skip && (toDepth === undefined || (toDepth !== undefined && depth < toDepth))) {
+                    let [ i, j ] = [ 0, 0 ]
+                    for (; i < value.length; i++) {
+                        let [ extract, subAst ] = shouldExtract(properties, toDepth, j)
+                        if (extract) {
+                            if (typeof value[i] === "object" && value[i] !== null)
+                                a[j++] = extractObjectOrArray(value[i], subAst, options,
+                                    depth + 1, `${path}.${i}`, seen, toDepth)
+                            else
+                                a[j++] = extractValue(value[i], subAst, options,
+                                    depth + 1, `${path}.${i}`, seen, toDepth)
+                        }
+                    }
+                }
+                value = a
+            }
+            else {
+                let skip = false
+                if (ast !== null && ast.type() === "Property")
+                    skip = true
+                else if (ast !== null && ast.type() !== "Object") {
+                    if (!options.ignoreMatchErrors)
+                        throw new Error(`extraction failed at "${path}": ` +
+                            `found "Object", expected "${ast.type()}"`)
+                    else
+                        skip = true
+                }
+                let o = {}
+                if (!skip && (toDepth === undefined || (toDepth !== undefined && depth < toDepth))) {
+                    for (var key in value) {
+                        if (!Object.hasOwnProperty.call(value, key))
+                            continue
+                        let [ extract, subAst ] = shouldExtract(properties, toDepth, key)
+                        if (extract) {
+                            if (typeof value[key] === "object" && value[key] !== null)
+                                o[key] = extractObjectOrArray(value[key], subAst, options,
+                                    depth + 1, `${path}.${key}`, seen, toDepth)
+                            else
+                                o[key] = extractValue(value[key], subAst, options,
+                                    depth + 1, `${path}.${key}`, seen, toDepth)
+                        }
+                    }
+                }
+                value = o
+            }
         }
     }
 
