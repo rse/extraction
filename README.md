@@ -19,7 +19,7 @@ contain many information. Hence, the clue is that the extracted object
 trees use links to break object reference cycles and can be just
 partial by leaving out non-requested information. The tree extraction
 is controlled with a custom JSON-style query language. The object tree
-is just structurally connected to the object graph, but contains no
+is structurally derived from the object graph, but contains no
 references to the original objects and hence can be further mutated by
 the caller.
 
