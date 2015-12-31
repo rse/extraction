@@ -16,17 +16,28 @@ About
 Extraction is a small JavaScript library for extracting object trees
 from arbitrary object graphs. Object graphs usually have cycles and
 contain many information. Hence, the clue is that the extracted object
-trees use links to break reference cycles and can be just partial by
-leaving out information. The Extraction library is intended for two
-main use cases: to support the persisting and restoring of arbitrary
-in-memory object graph structures (where the cycle problem has to be
-resolved) and to support the generation of responses in REST APIs based
-on object graphs (where the partial information has to be resolved).
+trees use links to break object reference cycles and can be just
+partial by leaving out non-requested information. The tree extraction
+is controlled with a custom JSON-style query language. The object tree
+is just structurally connected to the object graph, but contains no
+references to the original objects and hence can be further mutated by
+the caller.
+
+The Extraction library is primarily intended for two particular use
+cases: to support the persisting and restoring of arbitrary in-memory
+object graph structures (where the cycle problem has to be resolved)
+and to support the generation of responses in REST APIs based on object
+graphs (where the cycle problem and the partial information problem has
+to be resolved).
 
 Sneak Preview
 -------------
 
 ```js
+import { extract, reify } from "./lib/extraction"
+import { expect } from "chai"
+
+/*  the graph  */
 var Graph = {
     Person: [
         { id: 7,   name: "God",   tags: [ "good", "nice" ] },
@@ -43,11 +54,14 @@ Graph.Location[0].subs  = [ Graph.Location[1], Graph.Location[2] ]
 Graph.Location[1].owner = Graph.Person[0]
 Graph.Location[2].owner = Graph.Person[1]
 
-import { extract } from "extraction"
-let tree = extract(Graph.Person[0], "{ name, rival: { home: { name } }")
+/*  use case 1: graph persistance  */
+let storage = JSON.stringify(extract(Graph, "{ -> oo }"))
+expect(reify(JSON.parse(storage))).to.be.deep.equal(Graph)
 
-import { expect  } from "chai"
-expect(tree).to.be.deep.equal({ name: "God", rival: { home: { name: "Hell" } } })
+/*  use case 2: tree extraction  */
+let tree = extract(Graph.Person[0], "{ name, rival: { home: { *, !owner, !subs } } }")
+expect(tree).to.be.deep.equal({ name: "God", rival: { home: { id: 999, name: "Hell" } } })
+
 ```
 
 Installation
