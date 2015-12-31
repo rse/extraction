@@ -33,6 +33,8 @@ to be resolved).
 Sneak Preview
 -------------
 
+<img src="smp/graph.png" style="float: right;" alt=""/>
+
 ```js
 import { extract, reify } from "./lib/extraction"
 import { expect } from "chai"
