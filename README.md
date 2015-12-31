@@ -33,7 +33,7 @@ to be resolved).
 Sneak Preview
 -------------
 
-<img width="200" src="smp/graph.png" align="right" alt=""/>
+<img src="smp/graph.png" align="right" alt=""/>
 
 ```js
 import { extract, reify } from "./lib/extraction"
@@ -52,18 +52,20 @@ Graph.Person[0].home    = Graph.Location[1]
 Graph.Person[1].home    = Graph.Location[2]
 Graph.Person[1].rival   = Graph.Person[0]
 Graph.Person[0].rival   = Graph.Person[1]
-Graph.Location[0].subs  = [ Graph.Location[1], Graph.Location[2] ]
 Graph.Location[1].owner = Graph.Person[0]
 Graph.Location[2].owner = Graph.Person[1]
+Graph.Location[0].subs  = [ Graph.Location[1],
+                            Graph.Location[2] ]
 
 /*  use case 1: graph persistance  */
 let storage = JSON.stringify(extract(Graph, "{ -> oo }"))
 expect(reify(JSON.parse(storage))).to.be.deep.equal(Graph)
 
 /*  use case 2: tree extraction  */
-let tree = extract(Graph.Person[0], "{ name, rival: { home: { *, !owner, !subs } } }")
-expect(tree).to.be.deep.equal({ name: "God", rival: { home: { id: 999, name: "Hell" } } })
-
+let tree = extract(Graph.Person[0],
+    "{ name, rival: { home: { *, !owner, !subs } } }")
+expect(tree).to.be.deep.equal(
+    { name: "God", rival: { home: { id: 999, name: "Hell" } } })
 ```
 
 Installation
