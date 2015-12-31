@@ -18,7 +18,7 @@ server.route({
         let id = parseInt(request.params.id)
         let person = Graph.Person.find((person) => person.id === id)
         let response = JSON.stringify(extract(
-            person, "{ id, name, home { id, name } }"
+            person, "{ id, name, home: { id, name } }"
         ))
         reply(response)
     }
