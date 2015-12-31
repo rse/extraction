@@ -44,7 +44,7 @@ Graph.Location[1].owner = Graph.Person[0]
 Graph.Location[2].owner = Graph.Person[1]
 
 import { extract } from "extraction"
-let tree = extract(Graph.Person[0], "{ name, rival { home { name } }")
+let tree = extract(Graph.Person[0], "{ name, rival: { home: { name } }")
 
 import { expect  } from "chai"
 expect(tree).to.be.deep.equal({ name: "God", rival: { home: { name: "Hell" } } })
@@ -90,7 +90,7 @@ extraction.extract(graph: object, spec: string, options?: object): object
     object   | ::= | `"{"` content? `"}"`
     array    | ::= | `"["` content? `"]"`
     content  | ::= | (`"->"` num) / (field (`","` field)*)
-    field    | ::= | (property spec) / (`"!"`? property)
+    field    | ::= | (property ":" spec) / (`"!"`? property)
     property | ::= | id / `"*"` / (num `".."` num) / num
     num      | ::= | (`"-"`? `[0-9]`+) / `"-oo"` / `"oo"`
     id       | ::= | `[$a-zA-Z_][$a-zA-Z0-9_]`\*
@@ -269,7 +269,7 @@ server.route({
         let id = parseInt(request.params.id)
         let person = Graph.Person.find((person) => person.id === id)
         let response = JSON.stringify(extract(
-            person, "{ id, name, home { id, name } }"
+            person, "{ id, name, home: { id, name } }"
         ))
         reply(response)
     }

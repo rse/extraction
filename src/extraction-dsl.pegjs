@@ -50,7 +50,7 @@ content
       }
 
 field
-    = property:property _ spec:spec {
+    = property:property _ ":" _ spec:spec {
           return property.add(spec)
       }
     / not:"!"? _ property:property {
