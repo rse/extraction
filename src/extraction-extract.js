@@ -85,24 +85,28 @@ const extractObjectOrArray = (value, ast, options, depth, path, seen, toDepth) =
                 extract = true
             else {
                 for (let k = 0; k < properties.length; k++) {
+                    let matches = false
                     if (properties[k].get("id") === val)
-                        extract = true
+                        matches = true
                     else if (properties[k].get("any") === true)
-                        extract = true
+                        matches = true
                     else {
                         let from = properties[k].get("from")
                         let to   = properties[k].get("to")
                         if (   from !== undefined && to !== undefined
                             && from <= Number(val) && Number(val) <= to)
-                            extract = true
+                            matches = true
                     }
-                    if (extract && properties[k].get("not") === true)
-                        extract = false
-                    if (extract) {
-                        subAst = properties[k]
-                        if (subAst.childs().length === 1)
-                            /*  can only be Object or Array node  */
-                            subAst = subAst.childs()[0]
+                    if (matches) {
+                        if (properties[k].get("not") === true)
+                            extract = false
+                        else {
+                            extract = true
+                            subAst = properties[k]
+                            if (subAst.childs().length === 1)
+                                /*  can only be Object or Array node  */
+                                subAst = subAst.childs()[0]
+                        }
                     }
                 }
             }
