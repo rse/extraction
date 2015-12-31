@@ -13,6 +13,8 @@ Tree Extraction for JavaScript Object Graphs
 About
 -----
 
+<img width="200" src="smp/graph.png" style="float: right;" alt=""/>
+
 Extraction is a small JavaScript library for extracting object trees
 from arbitrary object graphs. Object graphs usually have cycles and
 contain many information. Hence, the clue is that the extracted object
@@ -32,8 +34,6 @@ to be resolved).
 
 Sneak Preview
 -------------
-
-<img src="smp/graph.png" style="float: right;" alt=""/>
 
 ```js
 import { extract, reify } from "./lib/extraction"
