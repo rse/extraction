@@ -44,8 +44,10 @@ describe("Extraction Library", function () {
             .to.be.deep.equal({ Person: [], Location: [] })
         expect(extraction.extract(Graph, "{ Person: [ *: { id, name } ] }", { ignoreMatchErrors: true, debug: false }))
             .to.be.deep.equal({ Person: [ { id: 7, name: "God" }, { id: 666, name: "Devil" } ] })
-        extraction.extract(Graph, "{ Person: [ *: { id, name } ] }")
-        extraction.extract(Graph, "{ Person: [ *: { id, name } ] }")
+    })
+    it("should fail to extract", function () {
+        //  expect(extraction.extract(Graph.Person[0], "{ name, home: { owner: { id, name } } }"))
+        //      .to.throw(Error)
     })
     it("should fully extract and reify again", function () {
         var g = extraction.extract(Graph, "{ -> oo }")
