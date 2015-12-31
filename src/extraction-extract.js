@@ -123,7 +123,9 @@ const extractObjectOrArray = (value, ast, options, depth, path, seen, toDepth) =
         /*  iterate over object properties  */
         if (value instanceof Array) {
             let skip = false
-            if (ast !== null && ast.type() !== "Array") {
+            if (ast !== null && ast.type() === "Property")
+                skip = true
+            else if (ast !== null && ast.type() !== "Array") {
                 if (!options.ignoreMatchErrors)
                     throw new Error(`extraction failed at "${path}": found "Array", expected "${ast.type()}"`)
                 else
@@ -148,7 +150,9 @@ const extractObjectOrArray = (value, ast, options, depth, path, seen, toDepth) =
         }
         else {
             let skip = false
-            if (ast !== null && ast.type() !== "Object") {
+            if (ast !== null && ast.type() === "Property")
+                skip = true
+            else if (ast !== null && ast.type() !== "Object") {
                 if (!options.ignoreMatchErrors)
                     throw new Error(`extraction failed at "${path}": found "Object", expected "${ast.type()}"`)
                 else
