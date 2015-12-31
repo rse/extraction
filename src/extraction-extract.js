@@ -59,6 +59,8 @@ const extractObjectOrArray = (value, ast, options, depth, path, seen, toDepth) =
     /*  detect circles in graph and break it with references to objects  */
     let pathPrevious = seen.get(value)
     if (pathPrevious) {
+        if (ast !== null && ast.childs().length > 0)
+            throw new Error(`"${path}": cannot extract parts of object already extracted at "${pathPrevious}"`)
         if (options.makeRefValue)
             value = options.makeRefValue(pathPrevious, path, value)
         else
