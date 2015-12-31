@@ -37,22 +37,58 @@ describe("Extraction Library", function () {
         expect(extraction).to.respondTo("extract")
         expect(extraction).to.respondTo("reify")
     })
-    it("should extract simply", function () {
-        expect(extraction.extract(Graph, "{}", { ignoreMatchErrors: true, debug: false }))
+    it("should extract simple cases", function () {
+        expect(extraction.extract(Graph, "{}"))
             .to.be.deep.equal({})
-        expect(extraction.extract(Graph, "{ * }", { ignoreMatchErrors: true, debug: false }))
+        expect(extraction.extract(Graph, "{ * }"))
             .to.be.deep.equal({ Person: [], Location: [] })
-        expect(extraction.extract(Graph, "{ Person: [ *: { id, name } ] }", { ignoreMatchErrors: true, debug: false }))
+        expect(extraction.extract(Graph.Person[0], "{ * }"))
+            .to.be.deep.equal({ id: 7, name: "God", tags: [], home: {}, rival: {} })
+        expect(extraction.extract(Graph.Person[0], "{ id, name }"))
+            .to.be.deep.equal({ id: 7, name: "God" })
+    })
+    it("should extract more complex cases", function () {
+        expect(extraction.extract(Graph, "{ Person: [ *: { id, name } ] }"))
             .to.be.deep.equal({ Person: [ { id: 7, name: "God" }, { id: 666, name: "Devil" } ] })
+        expect(extraction.extract(Graph, "{ Person: [ *: { id, name, tags: [ * ] } ] }"))
+            .to.be.deep.equal({ Person: [
+                { id: 7, name: "God", tags: [ "good", "nice" ] },
+                { id: 666, name: "Devil", tags: [ "bad", "cruel" ] }
+            ] })
+    })
+    it("should extract cycles", function () {
+        expect(extraction.extract(Graph.Person[0], "{ home: { owner } }"))
+            .to.be.deep.equal({ home: { owner: "@self" } })
+        expect(extraction.extract(Graph, "{ -> oo }"))
+            .to.be.deep.equal(
+                { Person:
+                   [ { id: 7,
+                       name: "God",
+                       tags: [ "good", "nice" ],
+                       home: { id: 1, name: "Heaven", owner: "@self.Person.0" },
+                       rival:
+                        { id: 666,
+                          name: "Devil",
+                          tags: [ "bad", "cruel" ],
+                          home: { id: 999, name: "Hell", owner: "@self.Person.0.rival" },
+                          rival: "@self.Person.0" } },
+                     "@self.Person.0.rival" ],
+                  Location:
+                   [ { id: 0,
+                       name: "World",
+                       subs: [ "@self.Person.0.home", "@self.Person.0.rival.home" ] },
+                     "@self.Person.0.home",
+                     "@self.Person.0.rival.home" ] }
+            )
+    })
+    it("should fully extract and reify again", function () {
+        var g = extraction.extract(Graph, "{ -> oo }")
+        g = extraction.reify(g)
+        expect(g).to.be.deep.equal(Graph)
     })
     it("should fail to extract", function () {
         //  expect(extraction.extract(Graph.Person[0], "{ name, home: { owner: { id, name } } }"))
         //      .to.throw(Error)
-    })
-    it("should fully extract and reify again", function () {
-        var g = extraction.extract(Graph, "{ -> oo }")
-        extraction.reify(g)
-        expect(g).to.be.deep.equal(Graph)
     })
 })
 
