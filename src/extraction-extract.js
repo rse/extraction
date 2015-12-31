@@ -87,6 +87,7 @@ const extractObjectOrArray = (value, ast, options, depth, path, seen, toDepth) =
                 extract = true
             else {
                 for (let k = 0; k < properties.length; k++) {
+                    /*  check whether property matches  */
                     let matches = false
                     if (properties[k].get("id") === val)
                         matches = true
@@ -101,14 +102,18 @@ const extractObjectOrArray = (value, ast, options, depth, path, seen, toDepth) =
                     }
                     if (matches) {
                         if (properties[k].get("not") === true)
+                            /*  negative matching result  */
                             extract = false
                         else {
+                            /*  positive matching result  */
                             extract = true
                             subAst = properties[k]
                             if (subAst.childs().length === 1)
                                 /*  can only be Object or Array node  */
                                 subAst = subAst.childs()[0]
                         }
+                        /*  we continue matching remaining properties,
+                            as we are using a "last-match" semantic  */
                     }
                 }
             }
