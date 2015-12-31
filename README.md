@@ -90,7 +90,7 @@ extraction.extract(graph: object, spec: string, options?: object): object
     object   | ::= | `"{"` content? `"}"`
     array    | ::= | `"["` content? `"]"`
     content  | ::= | (`"->"` num) / (field (`","` field)*)
-    field    | ::= | (property ":" spec) / (`"!"`? property)
+    field    | ::= | (property `":"` spec) / (`"!"`? property)
     property | ::= | id / `"*"` / (num `".."` num) / num
     num      | ::= | (`"-"`? `[0-9]`+) / `"-oo"` / `"oo"`
     id       | ::= | `[$a-zA-Z_][$a-zA-Z0-9_]`\*
