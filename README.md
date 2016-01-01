@@ -30,6 +30,11 @@ resolved) and, secondarily, to support the persisting and restoring of
 arbitrary in-memory object graph structures (where the cycle problem has
 to be resolved, too).
 
+Notice: this library intentionally does provide only a query language
+for the tree extraction (starting at a certain tree root node) and not
+also a query language for locating the tree root node. Locating nodes in
+a graph is not within the scope of this library.
+
 Sneak Preview
 -------------
 
