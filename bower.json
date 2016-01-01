@@ -6,7 +6,7 @@
         "fontawesome":        "4.5.0",
         "gridless":           "1.0.2",
         "jquery":             "2.1.4",
-        "extraction":         "0.9.8",
-        "syntax":             "1.2.0"
+        "syntax":             "1.2.0",
+        "extraction":         "0.9.9"
     }
 }
