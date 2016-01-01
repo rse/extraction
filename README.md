@@ -124,21 +124,27 @@ extraction.extract(graph: object, spec: string, options?: object): object
 
 - The `options` argument is optional and can contain the following properties:
 
-    - `procValueBefore: (value: any) => any`:<br/>
-       Pre-process a value (object or property value) before it is taken into account.
-       A caller could use this to convert the value from a custom type into a standard
-       JavaScript type.
+    - `procValueBefore: (value: any, path: string) => any`:<br/>
+       Pre-process a value (object or property value) at `path` before
+       it is taken into account. A caller could use this to convert the
+       value from a custom type into a standard JavaScript type.
 
-    - `procValueAfter: (value: any) => any`:<br/>
-       Post-process a value (object or property value) after it was taken into account.
-       A caller could use this to convert the value into an external representation
-       like JSON or XML.
+    - `procValueAfter: (value: any, path: string) => any`:<br/>
+       Post-process a value (object or property value) at `path` after
+       it was taken into account. A caller could use this to convert the
+       value into an external representation like JSON or XML.
 
     - `makeRefValue: (pathFirst: string, pathNow: string, obj: Object) => any`:<br/>
        Make an object reference out of an object `obj`, which is now found (again)
        at path `pathNow` and the first-time found at `pathFirst`. The default
        is to use `pathFirst` as the reference, but a caller could also use
        a stub for `obj` (usually based on just the OID of it) as the reference.
+
+    - `getKeysOfObject: (value: Object) => String[]`:<br/>
+       Retrieve the keys of an object `value`. A caller could use this
+       to provide the keys of custom objects which are either
+       non-enumerable or perhaps are based on getter/setter on the
+       prototype chain.
 
     - `debug: boolean`:<br/>
        Print debug information about internal processing.
@@ -157,17 +163,17 @@ extraction.reify(tree: object, options?: object): object
 
 - The `options` argument is optional and can contain the following properties:
 
-    - `procValueBefore: (value: any) => any`:<br/>
+    - `procValueBefore: (value: any, path: string) => any`:<br/>
        Pre-process a value (object or property value) after it is taken into account.
        A caller could use this to convert the value from an external representation
        like JSON or XML.
 
-    - `procValueAfter: (value: any) => any`:<br/>
+    - `procValueAfter: (value: any, path: string) => any`:<br/>
        Post-process a value (object or property value) after it was taken into account.
        A caller could use this to convert the value from a standard type into a custom
        JavaScript type.
 
-    -  `isReference: (value: any) => boolean`:<br/>
+    -  `isReference: (value: any, path: string) => boolean`:<br/>
        Determine whether `value` is an object reference.
 
     -  `getObject: (value: any, path: string) => any`:<br/>
@@ -322,7 +328,7 @@ as JSON, you can immediately encode it during extraction:
 
 ```js
 extraction.extract(Graph, "{ -> oo }", {
-    procValueAfter: (value) => {
+    procValueAfter: (value, path) => {
         if (typeof value === "object" && value !== null) {
             if (value instanceof Array)
                 value = "[" + value.join(",") + "]"
