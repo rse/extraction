@@ -179,9 +179,13 @@ const extractObjectOrArray = (value, ast, options, depth, path, seen, toDepth) =
                 }
                 let o = {}
                 if (!skip && (toDepth === undefined || (toDepth !== undefined && depth < toDepth))) {
-                    for (var key in value) {
-                        if (!Object.hasOwnProperty.call(value, key))
-                            continue
+                    let keys
+                    if (options.getKeysOfObject)
+                        keys = options.getKeysOfObject(value, path)
+                    else
+                        keys = Object.keys(value)
+                    for (let i = 0; i < keys.length; i++) {
+                        let key = keys[i]
                         let [ extract, subAst ] = shouldExtract(properties, toDepth, key)
                         if (extract) {
                             if (typeof value[key] === "object" && value[key] !== null)
