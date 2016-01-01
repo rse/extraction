@@ -23,12 +23,12 @@ is structurally derived from the object graph, but contains no
 references to the original objects and hence can be further mutated by
 the caller.
 
-The Extraction library is primarily intended for two particular use
-cases: to support the persisting and restoring of arbitrary in-memory
-object graph structures (where the cycle problem has to be resolved)
-and to support the generation of responses in REST APIs based on object
-graphs (where the cycle problem and the partial information problem has
-to be resolved).
+The Extraction library is intended for two main use cases: primarily, to
+support the generation of responses in REST APIs based on object graphs
+(where the cycle problem and the partial information problem has to be
+resolved) and, secondarily, to support the persisting and restoring of
+arbitrary in-memory object graph structures (where the cycle problem has
+to be resolved, too).
 
 Sneak Preview
 -------------
@@ -57,15 +57,15 @@ Graph.Location[2].owner = Graph.Person[1]
 Graph.Location[0].subs  = [ Graph.Location[1],
                             Graph.Location[2] ]
 
-/*  use case 1: graph persistance  */
-let storage = JSON.stringify(extract(Graph, "{ -> oo }"))
-expect(reify(JSON.parse(storage))).to.be.deep.equal(Graph)
-
-/*  use case 2: tree extraction  */
+/*  use case 1: tree extraction  */
 let tree = extract(Graph.Person[0],
     "{ name, rival: { home: { *, !owner, !subs } } }")
 expect(tree).to.be.deep.equal(
     { name: "God", rival: { home: { id: 999, name: "Hell" } } })
+
+/*  use case 2: graph persistance  */
+let storage = JSON.stringify(extract(Graph, "{ -> oo }"))
+expect(reify(JSON.parse(storage))).to.be.deep.equal(Graph)
 ```
 
 Installation
