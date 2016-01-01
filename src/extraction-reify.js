@@ -35,7 +35,7 @@ const reifyInternal = (node, options, path, map) => {
     /*  determine whether node is an object reference  */
     let isRef = false
     if (options.isReference)
-        isRef = options.isReference(node)
+        isRef = options.isReference(node, path)
     else
         isRef = (typeof node === "string" && node.match(/^@self(?:\..+|)$/))
     if (isRef) {
