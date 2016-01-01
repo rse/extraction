@@ -1,0 +1,148 @@
+/*
+**  Extraction -- Tree Extraction for JavaScript Object Graphs
+**  Copyright (c) 2015-2016 Ralf S. Engelschall <rse@engelschall.com>
+**
+**  Permission is hereby granted, free of charge, to any person obtaining
+**  a copy of this software and associated documentation files (the
+**  "Software"), to deal in the Software without restriction, including
+**  without limitation the rights to use, copy, modify, merge, publish,
+**  distribute, sublicense, and/or sell copies of the Software, and to
+**  permit persons to whom the Software is furnished to do so, subject to
+**  the following conditions:
+**
+**  The above copyright notice and this permission notice shall be included
+**  in all copies or substantial portions of the Software.
+**
+**  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+**  EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+**  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+**  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+**  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+**  TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+**  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+*/
+
+@import "lib/normalize/normalize.css";
+@import "lib/gridless/eg12.css";
+@import "lib/typopro/TypoPRO-OpenSans/TypoPRO-OpenSans-Light.css";
+@import "lib/typopro/TypoPRO-OpenSans/TypoPRO-OpenSans-Regular.css";
+@import "lib/typopro/TypoPRO-OpenSans/TypoPRO-OpenSans-Bold.css";
+@import "lib/typopro/TypoPRO-OpenSans/TypoPRO-OpenSans-ExtraBold.css";
+@import "lib/typopro/TypoPRO-BebasNeue/TypoPRO-BebasNeue-Bold.css";
+@import "lib/typopro/TypoPRO-BebasNeue/TypoPRO-BebasNeue-Regular.css";
+@import "lib/typopro/TypoPRO-DejaVu/TypoPRO-DejaVuSansMono-Regular.css";
+@import "lib/typopro/TypoPRO-DejaVu/TypoPRO-DejaVuSansMono-Bold.css";
+@import "lib/typopro/TypoPRO-DejaVu/TypoPRO-DejaVuSansMono-Oblique.css";
+@import "lib/typopro/TypoPRO-DejaVu/TypoPRO-DejaVuSansMono-BoldOblique.css";
+@import "lib/typopro/TypoPRO-Journal/TypoPRO-Journal.css";
+@import "lib/fontawesome/fontawesome.css";
+
+body {
+    background-color: #f8f8f8;
+    font-family: "TypoPRO Open Sans", sans-serif;
+    font-size: 11pt;
+    margin: 0px;
+    padding-left: 50px;
+    padding-right: 50px;
+    padding-top: 20px;
+    position: relative;
+    color: #0000000;
+}
+
+h1 {
+    font-weight: bold;
+    font-size: 40pt;
+    font-family: "TypoPRO Bebas Neue", sans-serif;
+    margin-top: 20px;
+    margin-bottom: 10px;
+    color: #6699cc;
+}
+h2 {
+    font-weight: bold;
+    font-size: 20pt;
+    font-family: "TypoPRO Bebas Neue", sans-serif;
+    margin-top: 20px;
+    margin-bottom: 10px;
+    color: #6699cc;
+}
+.caption {
+    font-weight: normal;
+    font-size: 12pt;
+    font-family: "TypoPRO Bebas Neue", sans-serif;
+    color: #6699cc;
+}
+
+code {
+    font-family: "TypoPRO DejaVu Sans Mono", sans-serif;
+}
+
+textarea,
+div[data-syntax="javascript"] {
+    font-family: "TypoPRO DejaVu Sans Mono", sans-serif;
+    font-size: 10pt;
+    margin: 5px;
+    border: 0px;
+    padding: 10px;
+    -webkit-box-shadow: 0 0 4px 0 #999999;
+    box-shadow: 0 0 4px 0 #999999;
+    background-color: #ffffff;
+    color: #000000;
+    -webkit-border-radius: 4px 4px 4px 4px;
+    border-radius: 4px 4px 4px 4px;
+}
+
+.box-graph-code div.code {
+    width:  calc(100% - 20px);
+    height: 380px;
+}
+
+.box-graph-diag img {
+    text-align: middle;
+}
+
+.box-query-input textarea {
+    width:  calc(100% - 20px);
+    height: 300px;
+}
+
+.box-query-output div.code {
+    width:  calc(100% - 30px);
+    height: 300px;
+    background-color: #fff8f0;
+}
+.box-query-output div.code.error {
+    background-color: #cc3333;
+    color: #ffffff;
+}
+
+/*
+ *  Syntax related
+ */
+
+.syntax {
+    background-color: #ffffff;
+    font-family: "TypoPRO DejaVu Sans Mono";
+    white-space: pre;
+    line-height: 1.15;
+}
+
+.syntax .syntax-marker {
+    border-top: 1px solid #f0f0d0;
+    background-color: #ffffe0;
+    border-bottom: 1px solid #f0f0d0;
+}
+.syntax .syntax-anchor {
+    color: #cc3333;
+}
+.syntax .syntax-comment {
+    font-style: italic;
+    color: #999999;
+}
+.syntax .syntax-keyword {
+    font-weight: bold;
+    color: #6699cc;
+}
+.syntax .syntax-literal {
+    color: #c08030;
+}
+

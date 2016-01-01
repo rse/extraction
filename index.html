@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="content-type" content="text/html; charset=utf-8">
+		<!--
+            Extraction ~ Tree Extraction for JavaScript Object Graphs
+            Copyright (c) 2015-2016 Ralf S. Engelschall <rse@engelschall.com>
+
+            Permission is hereby granted, free of charge, to any person obtaining
+            a copy of this software and associated documentation files (the
+            "Software"), to deal in the Software without restriction, including
+            without limitation the rights to use, copy, modify, merge, publish,
+            distribute, sublicense, and/or sell copies of the Software, and to
+            permit persons to whom the Software is furnished to do so, subject to
+            the following conditions:
+
+            The above copyright notice and this permission notice shall be included
+            in all copies or substantial portions of the Software.
+
+            THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+            EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+            MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+            IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+            CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+            TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+            SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+        -->
+        <title>Extraction Demo</title>
+        <script src="lib/jquery/jquery.js" type="text/javascript"></script>
+        <script src="lib/syntax/syntax.js" type="text/javascript"></script>
+        <script src="lib/extraction/extraction.js" type="text/javascript"></script>
+        <script src="index.js" type="text/javascript"></script>
+        <link href="index.css" rel="stylesheet" type="text/css"/>
+    </head>
+    <body>
+        <a href="https://github.com/rse/extraction">
+            <img style="position: fixed; top: 0; right: 0; border: 0; z-index: 2000;"
+                 src="https://camo.githubusercontent.com/a6677b08c955af8400f44c6298f40e7d19cc5b2d/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f677261795f3664366436642e706e67"
+                 alt="Fork me on GitHub"
+                 data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png"/>
+        </a>
+
+        <h1>Extraction Library</h1>
+
+        Extraction is a small JavaScript library for extracting object trees
+        from arbitrary object graphs. Object graphs usually have cycles and
+        contain many information. Hence, the clue is that the extracted object
+        trees use links to break object reference cycles and can be just
+        partial by leaving out non-requested information. The tree extraction
+        is controlled with a custom JSON-style query language. The object tree
+        is structurally derived from the object graph, but contains no
+        references to the original objects and hence can be further mutated by
+        the caller.
+
+        <p/>
+        The Extraction library is intended for two main use cases: primarily, to
+        support the generation of responses in REST APIs based on object graphs
+        (where the cycle problem and the partial information problem has to be
+        resolved) and, secondarily, to support the persisting and restoring of
+        arbitrary in-memory object graph structures (where the cycle problem has
+        to be resolved, too).
+
+        <h2>Small Demo</h2>
+
+        <div class="g-row">
+            <div class="g-col-6-12 box-graph-code">
+                <div class="caption">Your object graph:</div>
+                <div class="code" data-syntax="javascript"><pre>
+var Graph = {
+    Person: [
+        { id: 7,   name: "God",   tags: [ "good", "nice" ] },
+        { id: 666, name: "Devil", tags: [ "bad", "cruel" ] }
+    ],
+    Location: [
+        { id: 0,   name: "World" },
+        { id: 1,   name: "Heaven" },
+        { id: 999, name: "Hell" }
+    ]
+}
+
+Graph.Person[0].home    = Graph.Location[1]
+Graph.Person[1].home    = Graph.Location[2]
+
+Graph.Person[1].rival   = Graph.Person[0]
+Graph.Person[0].rival   = Graph.Person[1]
+
+Graph.Location[1].owner = Graph.Person[0]
+Graph.Location[2].owner = Graph.Person[1]
+
+Graph.Location[0].subs  = [ Graph.Location[1],
+                            Graph.Location[2] ]
+                </pre></div>
+            </div>
+            <div class="g-col-1-12">
+                &nbsp;
+            </div>
+            <div class="g-col-5-12 box-graph-diag">
+                <div>
+                    <img src="graph.png"/>
+                </div>
+            </div>
+        </div>
+        <p/>
+        <div class="g-row">
+            <div class="g-col-6-12 box-query-input">
+                <div class="caption">Your extraction query:</div>
+                <textarea>
+{
+    Person: [
+        0: {
+            name,
+            home: {
+                *,
+                !id
+            },
+            rival: {
+                home: {
+                    *,
+                    owner,
+                    !subs,
+                    !owner
+                }
+            }
+        }
+    ]
+}
+                </textarea>
+            </div>
+            <div class="g-col-1-12">
+                &nbsp;
+            </div>
+            <div class="g-col-5-12 box-query-output">
+                <div class="caption">Your extracted tree:</div>
+                <div class="code" data-syntax="javascript">
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

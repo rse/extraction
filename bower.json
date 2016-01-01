@@ -1,0 +1,12 @@
+{
+    "name": "es6-features",
+    "dependencies": {
+        "normalize.css":      "3.0.3",
+        "typopro-web":        "3.4.2",
+        "fontawesome":        "4.5.0",
+        "gridless":           "1.0.2",
+        "jquery":             "2.1.4",
+        "extraction":         "0.9.8",
+        "syntax":             "1.2.0"
+    }
+}
