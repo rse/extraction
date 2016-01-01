@@ -22,34 +22,40 @@
 **  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
+/*  import pegjs-util functionality  */
 {
     var unroll = options.util.makeUnroll(location, options)
     var ast    = options.util.makeAST   (location, options)
 }
 
+/*  entire specificiation  */
 spec
     = object
     / array
 
+/*  object specification  */
 object
     = _ "{" _ content:content? _ "}" _ {
           return ast("Object").add(content)
       }
 
+/*  array specification  */
 array
     = _ "[" _ content:content? _ "]" _ {
           return ast("Array").add(content)
       }
 
+/*  whole content of object/array  */
 content
     = "->" _ depth:num {
           return ast("Depth").set({ depth: depth })
       }
-    / field:field fields:(_ "," _ field)* {
-          return unroll(field, fields, 3)
+    / item:item items:(_ "," _ item)* {
+          return unroll(item, items, 3)
       }
 
-field
+/*  single content item  */
+item
     = property:property _ ":" _ spec:spec {
           return property.add(spec)
       }
@@ -59,6 +65,7 @@ field
           return property
       }
 
+/*  property identification  */
 property
     = id:$(id) {
           return ast("Property").set({ id: id })
@@ -73,6 +80,7 @@ property
           return ast("Property").set({ from: num, to: num })
       }
 
+/*  integral number and special cases of plus/minus infinity  */
 num
     = num:$("-"? [0-9]+) {
           return parseInt(num, 10)
@@ -84,16 +92,20 @@ num
           return Infinity
       }
 
+/*  JavaScript identifier  */
 id
     = [$a-zA-Z_][$a-zA-Z0-9_]*
 
+/*  optional blank material  */
 _ "blank"
     = (co / ws)*
 
+/*  C/C++ style comments  */
 co "comment"
     = "//" (![\r\n] .)*
     / "/*" (!"*/" .)* "*/"
 
+/*  ASCII whitespaces  */
 ws "whitespaces"
     = [ \t\r\n]+
 

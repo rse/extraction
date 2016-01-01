@@ -22,8 +22,11 @@
 **  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
+/*  import the two main API functions  */
 import extract from "./extraction-extract.js"
 import reify   from "./extraction-reify.js"
 
+/*  export them the standard CommonJS way to be
+    100% compatible with non-ES6 environments  */
 module.exports = { extract, reify }
 
