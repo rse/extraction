@@ -153,7 +153,7 @@ const extractObjectOrArray = (value, ast, options, depth, path, seen, toDepth) =
                 if (!skip && (toDepth === undefined || (toDepth !== undefined && depth < toDepth))) {
                     let [ i, j ] = [ 0, 0 ]
                     for (; i < value.length; i++) {
-                        let [ extract, subAst ] = shouldExtract(properties, toDepth, j)
+                        let [ extract, subAst ] = shouldExtract(properties, toDepth, i)
                         if (extract) {
                             if (typeof value[i] === "object" && value[i] !== null)
                                 a[j++] = extractObjectOrArray(value[i], subAst, options,
