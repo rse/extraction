@@ -1,6 +1,6 @@
 /*
 **  Extraction -- Tree Extraction for JavaScript Object Graphs
-**  Copyright (c) 2015 Ralf S. Engelschall <rse@engelschall.com>
+**  Copyright (c) 2015-2016 Ralf S. Engelschall <rse@engelschall.com>
 **
 **  Permission is hereby granted, free of charge, to any person obtaining
 **  a copy of this software and associated documentation files (the
@@ -23,9 +23,6 @@
 */
 
 /* global global: false */
-
-/*  support source-maps  */
-//  require("source-map-support").install()
 
 /*  provide exception swallowing  */
 global.swallow = function (thrower) { try { thrower(); } catch (e) {} };
