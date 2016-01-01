@@ -17,7 +17,7 @@
         "type": "MIT",
         "url":  "http://opensource.org/licenses/MIT"
     }],
-    "homepage": "https://github.com/rse/extraction",
+    "homepage": "http://rse.github.io/extraction/",
     "bugs":     "https://github.com/rse/extraction/issues",
     "dependencies": {
         "pegjs-otf":            "~1.1.1",
