@@ -134,11 +134,11 @@ extraction.extract(graph: object, spec: string, options?: object): object
        it was taken into account. A caller could use this to convert the
        value into an external representation like JSON or XML.
 
-    - `makeRefValue: (pathFirst: string, pathNow: string, obj: Object) => any`:<br/>
-       Make an object reference out of an object `obj`, which is now found (again)
+    - `makeRefValue: (value: Object, pathNow: string, pathFirst: string) => any`:<br/>
+       Make an object reference out of an object `value`, which is now found (again)
        at path `pathNow` and the first-time found at `pathFirst`. The default
        is to use `pathFirst` as the reference, but a caller could also use
-       a stub for `obj` (usually based on just the OID of it) as the reference.
+       a stub for `value` (usually based on just the OID of it) as the reference.
 
     - `getKeysOfObject: (value: Object) => String[]`:<br/>
        Retrieve the keys of an object `value`. A caller could use this

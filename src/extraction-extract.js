@@ -79,7 +79,7 @@ const extractObjectOrArray = (value, ast, options, depth, path, seen, toDepth) =
                 throw new Error(`"${path}": cannot extract parts of object already ` +
                     `extracted at "${pathPrevious}"`)
             if (options.makeRefValue)
-                value = options.makeRefValue(pathPrevious, path, value)
+                value = options.makeRefValue(value, path, pathPrevious)
             else
                 value = pathPrevious
         }
