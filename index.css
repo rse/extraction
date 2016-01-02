@@ -124,14 +124,18 @@ div[data-syntax="javascript"] {
     color: #ffffff;
 }
 
-.box-arrow {
+.box-arrow-h {
     text-align: center;
-    vertical-align: middle;
+    font-size: 40pt;
+    color: #cccccc;
+}
+.box-arrow-v {
+    text-align: center;
     font-size: 40pt;
     color: #cccccc;
     height: 300px;
 }
-.box-arrow i {
+.box-arrow-v i {
     margin-top: 150px;
 }
 
