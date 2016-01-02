@@ -72,6 +72,15 @@ h2 {
     color: #6699cc;
 }
 
+a, a:visited {
+    color: #6699cc;
+    text-decoration: none;
+    font-weight: bold;
+}
+a:hover {
+    border-bottom: 1px solid #6699cc;
+}
+
 code {
     font-family: "TypoPRO DejaVu Sans Mono", sans-serif;
 }
