@@ -1,5 +1,5 @@
 
-[Extraction](http://rse.github.io/extraction/)
+[Extraction](http://extraction.js.org/)
 ==========
 
 Tree Extraction for JavaScript Object Graphs
@@ -35,7 +35,7 @@ for the tree extraction (starting at a certain tree root node) and not
 also a query language for locating the tree root node. Locating nodes in
 a graph is not within the scope of this library.
 
-[Play around with Extraction in the interactive demo!](http://rse.github.io/extraction/)
+[Play around with Extraction in the interactive demo!](http://extraction.js.org/)
 
 Sneak Preview
 -------------
