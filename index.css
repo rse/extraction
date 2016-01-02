@@ -131,6 +131,9 @@ div[data-syntax="javascript"] {
     color: #cccccc;
     height: 300px;
 }
+.box-arrow i {
+    margin-top: 150px;
+}
 
 /*
  *  Syntax related
