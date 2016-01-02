@@ -127,8 +127,9 @@ div[data-syntax="javascript"] {
 .box-arrow {
     text-align: center;
     vertical-align: middle;
-    font-size: 20pt;
+    font-size: 40pt;
     color: #cccccc;
+    height: 300px;
 }
 
 /*
