@@ -126,12 +126,12 @@ div[data-syntax="javascript"] {
 
 .box-arrow-h {
     text-align: center;
-    font-size: 40pt;
+    font-size: 30pt;
     color: #cccccc;
 }
 .box-arrow-v {
     text-align: center;
-    font-size: 40pt;
+    font-size: 30pt;
     color: #cccccc;
     height: 300px;
 }
