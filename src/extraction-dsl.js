@@ -30,7 +30,7 @@ import CacheLRU    from "cache-lru"
 /*  pre-parse PEG grammar (replaced by browserify)  */
 /* global __dirname: false */
 var PEG = require("pegjs-otf")
-var PEGparser = PEG.buildParserFromFile(
+var PEGparser = PEG.generateFromFile(
     `${__dirname}/extraction-dsl.pegjs`,
     { optimize: "speed" }
 )
@@ -59,7 +59,7 @@ export default function dsl2ast (dsl, options) {
         let asty = new ASTY()
         let result = PEGutil.parse(PEGparser, dsl, {
             makeAST: (line, column, offset, args) =>
-                asty.create.apply(asty, args).pos(line, column, offset)
+                asty.create(...args).pos(line, column, offset)
         })
         if (result.error !== null)
             throw new Error("failed to parse extraction tree DSL:\n" +
