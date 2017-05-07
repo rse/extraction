@@ -20,9 +20,9 @@
     "homepage": "http://rse.github.io/extraction/",
     "bugs":     "https://github.com/rse/extraction/issues",
     "dependencies": {
-        "pegjs-otf":            "~1.2.2",
-        "pegjs-util":           "~1.4.2",
-        "asty":                 "~1.5.0",
+        "pegjs-otf":            "~1.2.3",
+        "pegjs-util":           "~1.4.3",
+        "asty":                 "~1.5.1",
         "cache-lru":            "~1.0.15"
     },
     "devDependencies": {
