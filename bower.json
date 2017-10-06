@@ -1,6 +1,6 @@
 {
     "name":        "extraction",
-    "version":     "0.9.16",
+    "version":     "0.9.17",
     "description": "Tree Extraction for JavaScript Object Graphs",
     "main":        "lib/extraction.js",
     "homepage":    "http://rse.github.io/extraction/",
