@@ -78,16 +78,8 @@ expect(reify(JSON.parse(storage))).to.be.deep.equal(Graph)
 Installation
 ------------
 
-#### Node environments (with NPM package manager):
-
 ```shell
 $ npm install extraction
-```
-
-#### Browser environments (with Bower package manager):
-
-```shell
-$ bower install extraction
 ```
 
 Usage
