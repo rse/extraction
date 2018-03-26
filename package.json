@@ -1,6 +1,6 @@
 {
     "name":        "extraction",
-    "version":     "0.9.19",
+    "version":     "1.0.0",
     "description": "Tree Extraction for JavaScript Object Graphs",
     "keywords":    [ "tree", "graph", "data", "structure", "extraction", "object" ],
     "main":        "lib/extraction.js",
