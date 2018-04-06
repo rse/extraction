@@ -25,14 +25,21 @@
 /* global global: false */
 
 /*  provide exception swallowing  */
-global.swallow = function (thrower) { try { thrower(); } catch (e) {} };
+global.swallow = function (thrower) {
+    try {
+        thrower()
+    }
+    catch (e) {
+        /* */
+    }
+}
 
 /*  provide assertion functionality (base features)  */
-global.chai    = require("chai");
-global.should  = require("chai").should();
-global.expect  = require("chai").expect;
-global.assert  = require("chai").assert;
+global.chai    = require("chai")
+global.should  = require("chai").should()
+global.expect  = require("chai").expect
+global.assert  = require("chai").assert
 
 /*  print stack traces on assertion failures  */
-global.chai.config.includeStack = true;
+global.chai.config.includeStack = true
 

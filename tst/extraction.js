@@ -60,26 +60,26 @@ describe("Extraction Library", function () {
         expect(extraction.extract(Graph.Person[0], "{ home: { owner } }"))
             .to.be.deep.equal({ home: { owner: "@self" } })
         expect(extraction.extract(Graph, "{ -> oo }"))
-            .to.be.deep.equal(
-                { Person:
-                   [ { id: 7,
-                       name: "God",
-                       tags: [ "good", "nice" ],
-                       home: { id: 1, name: "Heaven", owner: "@self.Person.0" },
-                       rival:
-                        { id: 666,
-                          name: "Devil",
-                          tags: [ "bad", "cruel" ],
-                          home: { id: 999, name: "Hell", owner: "@self.Person.0.rival" },
-                          rival: "@self.Person.0" } },
-                     "@self.Person.0.rival" ],
-                  Location:
-                   [ { id: 0,
-                       name: "World",
-                       subs: [ "@self.Person.0.home", "@self.Person.0.rival.home" ] },
-                     "@self.Person.0.home",
-                     "@self.Person.0.rival.home" ] }
-            )
+            .to.be.deep.equal({
+                Person: [ {
+                    id: 7,
+                    name: "God",
+                    tags: [ "good", "nice" ],
+                    home: { id: 1, name: "Heaven", owner: "@self.Person.0" },
+                    rival: {
+                        id: 666,
+                        name: "Devil",
+                        tags: [ "bad", "cruel" ],
+                        home: { id: 999, name: "Hell", owner: "@self.Person.0.rival" },
+                        rival: "@self.Person.0"
+                    }
+                }, "@self.Person.0.rival" ],
+                Location: [ {
+                    id: 0,
+                    name: "World",
+                    subs: [ "@self.Person.0.home", "@self.Person.0.rival.home" ]
+                }, "@self.Person.0.home", "@self.Person.0.rival.home" ]
+            })
     })
     it("should fully extract and reify again", function () {
         var g = extraction.extract(Graph, "{ -> oo }")
