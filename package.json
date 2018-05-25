@@ -22,7 +22,7 @@
     "dependencies": {
         "pegjs-otf":              "1.2.8",
         "pegjs-util":             "1.4.11",
-        "asty":                   "1.7.11",
+        "asty":                   "1.7.12",
         "cache-lru":              "1.1.3"
     },
     "devDependencies": {
@@ -36,10 +36,10 @@
         "eslint":                 "4.19.1",
         "eslint-config-standard": "11.0.0",
         "eslint-plugin-standard": "3.1.0",
-        "eslint-plugin-promise":  "3.7.0",
-        "eslint-plugin-import":   "2.11.0",
+        "eslint-plugin-promise":  "3.8.0",
+        "eslint-plugin-import":   "2.12.0",
         "eslint-plugin-node":     "6.0.1",
-        "mocha":                  "5.1.1",
+        "mocha":                  "5.2.0",
         "chai":                   "4.1.2",
         "babelify":               "8.0.0",
         "babel-core":             "6.26.3",
@@ -47,7 +47,7 @@
         "minifyify":              "7.3.5",
         "browserify-header":      "0.9.4",
         "browserify-derequire":   "0.9.6",
-        "source-map-support":     "0.5.5"
+        "source-map-support":     "0.5.6"
     },
     "scripts": {
         "prepublishOnly":  "grunt default",
