@@ -44,17 +44,25 @@ module.exports = function (grunt) {
                 },
                 options: {
                     transform: [
-                        [ "babelify", { presets: [ "es2015" ] } ],
-                        "pegjs-otf/transform"
+                        [ "babelify", {
+                            presets: [
+                                [ "@babel/preset-env", {
+                                    "targets": {
+                                        "browsers": "last 8 versions, > 1%, ie 11"
+                                    }
+                                } ]
+                            ]
+                        } ],
+                        "pegjs-otf/transform",
+                        [ "uglifyify", { sourceMap: false, global: true } ]
                     ],
                     plugin: [
-                        [ "minifyify" ],
                         [ "browserify-derequire" ],
                         [ "browserify-header" ]
                     ],
                     browserifyOptions: {
                         standalone: "Extraction",
-                        debug: true
+                        debug: false
                     }
                 }
             }
