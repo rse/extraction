@@ -13,10 +13,7 @@
         "email": "rse@engelschall.com",
         "url":   "http://engelschall.com"
     },
-    "licenses": [{
-        "type": "MIT",
-        "url":  "http://opensource.org/licenses/MIT"
-    }],
+    "license":  "MIT",
     "homepage": "http://rse.github.io/extraction/",
     "bugs":     "https://github.com/rse/extraction/issues",
     "dependencies": {
