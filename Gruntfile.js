@@ -26,54 +26,44 @@
 module.exports = function (grunt) {
     grunt.loadNpmTasks("grunt-contrib-clean");
     grunt.loadNpmTasks("grunt-contrib-copy");
-    grunt.loadNpmTasks("grunt-bower-install-simple");
 
     grunt.initConfig({
         pkg: grunt.file.readJSON("package.json"),
-        "bower-install-simple": {
-            "main": {
-                options: {
-                    color:       true,
-                    production:  true,
-                    directory:   "bower_components"
-                }
-            }
-        },
         copy: {
             "normalize": {
-                src: [ "bower_components/normalize.css/normalize.css" ],
+                src: [ "node_modules/normalize.css/normalize.css" ],
                 dest: "lib/normalize/normalize.css"
             },
             "gridless": {
-                src: [ "bower_components/gridless/predef/eg12.css" ],
+                src: [ "node_modules/gridless/predef/eg12.css" ],
                 dest: "lib/gridless/eg12.css"
             },
             "syntax": {
-                src: [ "bower_components/syntax/lib/syntax.browser.js" ],
+                src: [ "node_modules/syntax/lib/syntax.browser.js" ],
                 dest: "lib/syntax/syntax.js"
             },
             "jquery": {
-                src: [ "bower_components/jquery/dist/jquery.min.js" ],
+                src: [ "node_modules/jquery/dist/jquery.min.js" ],
                 dest: "lib/jquery/jquery.js"
             },
             "extraction": {
-                src: [ "bower_components/extraction/lib/extraction.js" ],
+                src: [ "node_modules/extraction/lib/extraction.js" ],
                 dest: "lib/extraction/extraction.js"
             },
             "typopro": {
                 files: [
-                    { expand: true, flatten: false, cwd: "bower_components/typopro-web/web",
+                    { expand: true, flatten: false, cwd: "node_modules/typopro-web/web",
                       src: "TypoPRO-OpenSans/**", dest: "lib/typopro/" },
-                    { expand: true, flatten: false, cwd: "bower_components/typopro-web/web",
+                    { expand: true, flatten: false, cwd: "node_modules/typopro-web/web",
                       src: "TypoPRO-BebasNeue/**", dest: "lib/typopro/" },
-                    { expand: true, flatten: false, cwd: "bower_components/typopro-web/web",
+                    { expand: true, flatten: false, cwd: "node_modules/typopro-web/web",
                       src: "TypoPRO-DejaVu/**", dest: "lib/typopro/" },
-                    { expand: true, flatten: false, cwd: "bower_components/typopro-web/web",
+                    { expand: true, flatten: false, cwd: "node_modules/typopro-web/web",
                       src: "TypoPRO-Journal/**", dest: "lib/typopro/" }
                 ]
             },
             "font-awesome-css": {
-                src: [ "bower_components/fontawesome/css/font-awesome.css" ],
+                src: [ "node_modules/font-awesome/css/font-awesome.css" ],
                 dest: "lib/fontawesome/fontawesome.css",
                 options: {
                     process: function (content, srcpath) {
@@ -83,7 +73,7 @@ module.exports = function (grunt) {
             },
             "font-awesome-fonts": {
                 files: [{
-                    expand: true, flatten: false, cwd: "bower_components/fontawesome/fonts",
+                    expand: true, flatten: false, cwd: "node_modules/font-awesome/fonts",
                     src: "fontawesome-webfont.*", dest: "lib/fontawesome/",
                     rename: function (src, dest) {
                         return src + dest.replace(/fontawesome-webfont/, "fontawesome");
@@ -97,6 +87,6 @@ module.exports = function (grunt) {
         }
     });
 
-    grunt.registerTask("default", [ "bower-install-simple", "copy" ]);
+    grunt.registerTask("default", [ "copy" ]);
 };
 
