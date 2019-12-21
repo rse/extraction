@@ -56,8 +56,8 @@ export default function dsl2ast (dsl, options) {
         /*  generate AST form DSL  */
         if (options.debug)
             console.log("extraction: DEBUG: extraction tree AST: generating from scratch")
-        let asty = new ASTY()
-        let result = PEGutil.parse(PEGparser, dsl, {
+        const asty = new ASTY()
+        const result = PEGutil.parse(PEGparser, dsl, {
             makeAST: (line, column, offset, args) =>
                 asty.create(...args).pos(line, column, offset)
         })

@@ -60,7 +60,7 @@ const extractObjectOrArray = (value, ast, options, depth, path, seen, toDepth) =
         if (value.global)     flags += "g"
         if (value.ignoreCase) flags += "i"
         if (value.multiline)  flags += "m"
-        let valueNew = new RegExp(value.source, flags)
+        const valueNew = new RegExp(value.source, flags)
         if (value.lastIndex)
             valueNew.lastIndex = value.lastIndex
         value = valueNew
@@ -73,7 +73,7 @@ const extractObjectOrArray = (value, ast, options, depth, path, seen, toDepth) =
                 `graph: ${typeof value}, AST: ${ast !== null ? ast.type() : "null"}`)
 
         /*  detect circles in graph and break it with references to objects  */
-        let pathPrevious = seen.get(value)
+        const pathPrevious = seen.get(value)
         if (pathPrevious) {
             if (ast !== null && ast.childs().length > 0)
                 throw new Error(`"${path}": cannot extract parts of object already ` +
@@ -111,8 +111,8 @@ const extractObjectOrArray = (value, ast, options, depth, path, seen, toDepth) =
                         else if (properties[k].get("any") === true)
                             matches = true
                         else {
-                            let from = properties[k].get("from")
-                            let to   = properties[k].get("to")
+                            const from = properties[k].get("from")
+                            const to   = properties[k].get("to")
                             if (   from !== undefined && to !== undefined
                                 && from <= Number(val) && Number(val) <= to)
                                 matches = true
@@ -149,11 +149,11 @@ const extractObjectOrArray = (value, ast, options, depth, path, seen, toDepth) =
                     else
                         skip = true
                 }
-                let a = []
+                const a = []
                 if (!skip && (toDepth === undefined || (toDepth !== undefined && depth < toDepth))) {
                     let [ i, j ] = [ 0, 0 ]
                     for (; i < value.length; i++) {
-                        let [ extract, subAst ] = shouldExtract(properties, toDepth, i)
+                        const [ extract, subAst ] = shouldExtract(properties, toDepth, i)
                         if (extract) {
                             if (typeof value[i] === "object" && value[i] !== null)
                                 a[j++] = extractObjectOrArray(value[i], subAst, options,
@@ -177,7 +177,7 @@ const extractObjectOrArray = (value, ast, options, depth, path, seen, toDepth) =
                     else
                         skip = true
                 }
-                let o = {}
+                const o = {}
                 if (!skip && (toDepth === undefined || (toDepth !== undefined && depth < toDepth))) {
                     let keys
                     if (options.getKeysOfObject)
@@ -185,8 +185,8 @@ const extractObjectOrArray = (value, ast, options, depth, path, seen, toDepth) =
                     else
                         keys = Object.keys(value)
                     for (let i = 0; i < keys.length; i++) {
-                        let key = keys[i]
-                        let [ extract, subAst ] = shouldExtract(properties, toDepth, key)
+                        const key = keys[i]
+                        const [ extract, subAst ] = shouldExtract(properties, toDepth, key)
                         if (extract) {
                             if (typeof value[key] === "object" && value[key] !== null)
                                 o[key] = extractObjectOrArray(value[key], subAst, options,
@@ -223,10 +223,10 @@ const extract = (graph, tree, options) => {
         throw new Error("invalid options argument (expected object type)")
 
     /*  parse extraction tree DSL into AST  */
-    let treeAST = dsl2ast(tree, options)
+    const treeAST = dsl2ast(tree, options)
 
     /*  remember seen objects in a collection  */
-    let seen = new Seen()
+    const seen = new Seen()
 
     /*  start recursive extraction  */
     return extractObjectOrArray(graph, treeAST, options, 0, "@self", seen, undefined)

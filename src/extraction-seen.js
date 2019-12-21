@@ -50,7 +50,7 @@ const Seen = (() => {
                 this.seenSeq.push(obj)
             }
             get (obj) {
-                let offset = this.seenSeq.indexOf(obj)
+                const offset = this.seenSeq.indexOf(obj)
                 if (offset >= 0)
                     return this.seenMap[offset]
                 else

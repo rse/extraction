@@ -62,7 +62,7 @@ const reifyInternal = (node, options, path, map) => {
         }
         else
             /*  regular object  */
-            for (let key in node)
+            for (const key in node)
                 if (Object.hasOwnProperty.call(node, key))
                     node[key] = reifyInternal(node[key], options, `${path}.${key}`, map)
     }
