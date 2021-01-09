@@ -29,14 +29,15 @@ import CacheLRU    from "cache-lru"
 
 /*  pre-parse PEG grammar (replaced by browserify)  */
 /* global __dirname: false */
-var PEG = require("pegjs-otf")
-var PEGparser = PEG.generateFromFile(
+/* eslint node/no-path-concat: off */
+const PEG = require("pegjs-otf")
+const PEGparser = PEG.generateFromFile(
     `${__dirname}/extraction-dsl.pegjs`,
     { optimize: "speed" }
 )
 
 /*  limited global cache of ASTs  */
-var ASTcache = new CacheLRU()
+const ASTcache = new CacheLRU()
 ASTcache.limit(64)
 
 /*  parse the Domain-Specific Language (DSL) into the Abstract Syntax Tree (AST)  */

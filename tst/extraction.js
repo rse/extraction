@@ -28,8 +28,8 @@
 /* global require: false */
 /* jshint -W030: false */
 
-var extraction = require("../lib/extraction.js")
-var Graph      = require("../smp/graph.js")
+const extraction = require("../lib/extraction.js")
+const Graph      = require("../smp/graph.js")
 
 describe("Extraction Library", function () {
     it("should expose its official API", function () {
@@ -82,7 +82,7 @@ describe("Extraction Library", function () {
             })
     })
     it("should fully extract and reify again", function () {
-        var g = extraction.extract(Graph, "{ -> oo }")
+        let g = extraction.extract(Graph, "{ -> oo }")
         g = extraction.reify(g)
         expect(g).to.be.deep.equal(Graph)
     })
