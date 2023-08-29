@@ -14,7 +14,7 @@
         "url":   "http://engelschall.com"
     },
     "license":  "MIT",
-    "homepage": "http://rse.github.io/extraction/",
+    "homepage": "https://extraction.js.org/",
     "bugs":     "https://github.com/rse/extraction/issues",
     "dependencies": {
         "pegjs-otf":              "1.2.20",
