@@ -29,7 +29,7 @@ import CacheLRU    from "cache-lru"
 
 /*  pre-parse PEG grammar (replaced by browserify)  */
 /* global __dirname: false */
-/* eslint node/no-path-concat: off */
+/* eslint n/no-path-concat: off */
 const PEG = require("pegjs-otf")
 const PEGparser = PEG.generateFromFile(
     `${__dirname}/extraction-dsl.pegjs`,

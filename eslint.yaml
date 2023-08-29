@@ -34,8 +34,6 @@ parserOptions:
     ecmaFeatures:
         jsx:     false
 
-parser: babel-eslint
-
 env:
     browser:       true
     node:          true
