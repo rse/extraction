@@ -1,19 +1,19 @@
 {
     "name": "extraction-demo",
     "devDependencies": {
-        "grunt":                      "1.0.4",
-        "grunt-cli":                  "1.3.2",
-        "grunt-contrib-clean":        "2.0.0",
+        "grunt":                      "1.6.1",
+        "grunt-cli":                  "1.4.3",
+        "grunt-contrib-clean":        "2.0.1",
         "grunt-contrib-copy":         "1.0.0",
         "babel":                      "6.23.0"
     },
     "dependencies": {
         "normalize.css":              "8.0.1",
-        "typopro-web":                "4.2.0",
+        "typopro-web":                "4.2.6",
         "font-awesome":               "4.7.0",
-        "gridless":                   "1.0.4",
-        "jquery":                     "3.4.1",
-        "syntax":                     "1.5.0",
-        "extraction":                 "1.1.1"
+        "gridless":                   "1.0.7",
+        "jquery":                     "3.7.1",
+        "syntax":                     "1.6.2",
+        "extraction":                 "1.1.4"
     }
 }
